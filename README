@@ -1,0 +1,6 @@
+Possible Improvements:
+    Optimize Heuristic
+    MultiThread
+
+Questionable
+    Check for multiple same points on read in?
