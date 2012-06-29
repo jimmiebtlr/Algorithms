@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
     ConstraintResolver cs(points, n, k, pairs);
     cs.setVerbosity(1);
     cs.setMaxPhase(1);
-    cs.setRunTime(1/4.0);
+    cs.setRunTime(1/2.0);
     cs.setOutputMode( POINT );
 
     cout << "Solving..." << endl;

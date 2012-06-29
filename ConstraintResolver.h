@@ -84,9 +84,9 @@ private:
     bool constraintsResolved( deque<Move> moves );
     
     // Checks for solution found
-    bool isSolution( vector< vector< bool > >& pastConstraints );
-    bool findCliques( vector< int >& cliquePool, vector< int >& clique );
-    bool cliqueMember( int newMember, vector< int >& clique );
+    bool isSolution( );
+    bool findClique( vector< int >& cliquePool, vector< int >& clique );
+    bool cliqueMember( int newMember, vector< int >& clique, vector< int >& cliquePool );
     
     // printSolutionHelpers
     string outputModePoint( unsigned short ptIndex );

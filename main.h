@@ -22,7 +22,7 @@
 #include "ConstraintResolver.h"
 #include "Spread.h"
 
-const std::string DEF_FILE = "Maps/input1.txt";
+const std::string DEF_FILE = "Maps/input5.txt";
 
 // Function Prototypes
 std::string procCmdLine(int argc, const char** argv);    // looks for input file and "-"

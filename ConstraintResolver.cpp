@@ -153,6 +153,13 @@ bool ConstraintResolver::determineConstraintResMode(bool resolved)
     // If a resolution to the constraint wasn't found using current_phase and depth
     if (!resolved)
     {
+        cout << "Checking for solution" << endl;
+        if (isSolution())
+        {
+            cout << "Found the solution." << endl;
+            return 1;
+        }
+        
         if (current_phase == 0)
         {
             if (verbosity >= 1)
@@ -442,7 +449,7 @@ void ConstraintResolver::rollbackMoves(deque<Move>& moves, vector< bool >& moved
 bool ConstraintResolver::isSolution()
 {
     vector< int > cliquePool;
-    vector< vector < int> > cliques;
+    vector < int> clique;
 
     // See what constraints both pair.pt1 and pair.pt2 share
     for (int i = 0; i < pastConstraints.size(); i++)
@@ -454,35 +461,70 @@ bool ConstraintResolver::isSolution()
             cliquePool.push_back(i);
         }
     }
-    findCliques(cliquePool, cliques);
+
+    return findClique(cliquePool, clique);
 }
 
 /*
  * Recursivly find cliques
+ * clique contain indexs in cliquePool
  */
-bool ConstraintResolver::findCliques(vector< int >& cliquePool, vector< int >& cliques)
+bool ConstraintResolver::findClique(vector< int >& cliquePool, vector< int >& clique)
 {
-    // If there are less left to look at then are needed, its automatically false
-    for( int i = cliquePool.size()-1; i > k - cliques.size() - 1; i-- )
+    int start;
+    if( clique.size() > 0 )
     {
-        
+        start = clique.back() +1;
     }
+    else
+    {
+        start = 0;
+    }
+    // If there are less left to look at then are needed, its automatically false
+    for (int i = start; i > k - clique.size() - 1; i--)
+    {
+        if (cliqueMember(i, clique, cliquePool))
+        {
+            clique.push_back(i);
+
+            // If a clique was found of size k-1 the solution has been found
+            // If not go to next recursion level
+            if (clique.size() == k - 1)
+            {
+                return true;
+            }
+            else
+            {
+                if (findClique(cliquePool, clique))
+                {
+                    return true;
+                }
+                else
+                {
+                    // roll back change and continue for loop
+                    clique.pop_back();
+                }
+            }
+        }
+    }
+
+    // exahausted search
     return false;
 }
 
 /*
  * Determines if newMember is actually a valid addition to the clique
  */
-bool ConstraintResolver::cliqueMember( int newMember, vector< int >& clique )
+bool ConstraintResolver::cliqueMember(int newMember, vector< int >& clique, vector< int >& cliquePool)
 {
-    for( int i = 0; i<clique.size(); i++ )
+    for (int i = 0; i < clique.size(); i++)
     {
-        if( !pastConstraints.at(newMember).at(clique.at(i)) )
+        if (!pastConstraints.at(cliquePool.at(newMember)).at(cliquePool.at(clique.at(i))))
         {
             return false;
         }
-        return true;
     }
+    return true;
 }
 
 /*
